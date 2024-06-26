@@ -12,7 +12,7 @@ type Props = {
 }
 
 export type AnswersData = {
-    [key: string]: string | null
+    [key: string]: string | string[] | null
 }
 
 export function Testing({ test }: Props) {

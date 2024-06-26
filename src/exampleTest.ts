@@ -21,121 +21,55 @@ export const exampleTest: Test = {
         {
             text: 'Как объявить переменную для хранения числа?',
             answers: [
-                {
-                    text: 'let number = "one"',
-                    isRight: false
-                },
-                {
-                    text: 'let number = 1',
-                    isRight: true
-                },
-                {
-                    text: 'let number = true',
-                    isRight: false
-                }
-            ]
+                { text: 'let number = "one"', isRight: false },
+                { text: 'let number = 1', isRight: true },
+                { text: 'let number = true', isRight: false }
+            ],
+            type: 'single'
         },
         {
-            text: 'Что делает оператор ===?',
-            answers: [
-                {
-                    text: 'Присваивает значение',
-                    isRight: false
-                },
-                {
-                    text: 'Сравнивает значения и типы без приведения типов',
-                    isRight: true
-                },
-                {
-                    text: 'Сравнивает только значения, приводя типы',
-                    isRight: false
-                }
-            ]
+            text: 'Как расшифровывается NaN в JavaScript?',
+            answers: [{ text: 'Not a Number', isRight: true }],
+            type: 'short'
         },
         {
-            text: 'Какой метод используется для добавления элемента в конец массива?',
+            text: 'Какие из следующих являются циклами в JavaScript?',
             answers: [
-                {
-                    text: 'array.unshift()',
-                    isRight: false
-                },
-                {
-                    text: 'array.push()',
-                    isRight: true
-                },
-                {
-                    text: 'array.pop()',
-                    isRight: false
-                }
-            ]
+                { text: 'for', isRight: true },
+                { text: 'while', isRight: true },
+                { text: 'repeat until', isRight: false }
+            ],
+            type: 'multi'
         },
         {
-            text: 'Какое значение имеет undefined?',
-            answers: [
-                {
-                    text: 'Отсутствие значения',
-                    isRight: true
-                },
-                {
-                    text: 'Нулевое значение',
-                    isRight: false
-                },
-                {
-                    text: 'Пустая строка',
-                    isRight: false
-                }
-            ]
+            text: 'Укажите название типа данных (на английском) для логических значений в JavaScript',
+            answers: [{ text: 'Boolean', isRight: true }],
+            type: 'short'
         },
         {
-            text: 'Выберите правильный способ создания функции в JavaScript.',
+            text: 'Какие из перечисленных методов массива изменяют исходный массив в JavaScript?',
             answers: [
-                {
-                    text: 'function myFunc() {}',
-                    isRight: true
-                },
-                {
-                    text: 'let myFunc = function() {};',
-                    isRight: true
-                },
-                {
-                    text: 'Оба варианта верны',
-                    isRight: true
-                }
-            ]
+                { text: 'map()', isRight: false },
+                { text: 'filter()', isRight: false },
+                { text: 'push()', isRight: true },
+                { text: 'pop()', isRight: true },
+                { text: 'shift()', isRight: true }
+            ],
+            type: 'multi'
         },
         {
-            text: 'Какой метод массива возвращает новый массив, содержащий все элементы, прошедшие проверку, заданную в передаваемой функции?',
+            text: 'Какие операторы сравнения в JavaScript выполняют приведение типов?',
             answers: [
-                {
-                    text: 'filter()',
-                    isRight: true
-                },
-                {
-                    text: 'map()',
-                    isRight: false
-                },
-                {
-                    text: 'reduce()',
-                    isRight: false
-                }
-            ]
+                { text: '===', isRight: false },
+                { text: '!==', isRight: false },
+                { text: '==', isRight: true },
+                { text: '!=', isRight: true }
+            ],
+            type: 'multi'
         },
         {
-            text: 'Какой объект в JavaScript используется для работы с датами?',
-            answers: [
-                {
-                    text: 'Date',
-                    isRight: true
-                },
-                {
-                    text: 'Time',
-                    isRight: false
-                },
-                {
-                    text: 'Moment',
-                    isRight: false
-                }
-            ]
+            text: 'Напишите код для создания объекта в JavaScript.',
+            type: 'detailed'
         }
     ]
 }

@@ -18,29 +18,7 @@ export function Result({
 }: Props) {
     const answersData = form.watch()
 
-    let score = 0
-
-    for (let key in answersData) {
-        const questionIndex = parseInt(key)
-
-        if (
-            isNaN(questionIndex) ||
-            questionIndex < 0 ||
-            questionIndex >= test.questions.length
-        ) {
-            throw new Error('Неверный номер вопроса')
-        }
-
-        if (!answersData[key]) {
-            continue
-        }
-
-        const answerIndex = parseInt(answersData[key])
-
-        if (test.questions[questionIndex].answers[answerIndex].isRight) {
-            score++
-        }
-    }
+    const score = calculateScore(answersData, test)
 
     const gradesSorted = structuredClone(test.grades)
     gradesSorted.sort((a, b) => b.score - a.score)
@@ -53,14 +31,32 @@ export function Result({
         }
     }
 
+    const detailedCount = test.questions.filter(
+        (x) => x.type === 'detailed'
+    ).length
+
     return (
         <>
             <Text fontWeight='bold' marginTop={25}>
                 Правильных ответов: {score}/{test.questions.length}
             </Text>
-            <Text fontWeight='bold' color={grade ? 'green' : 'red'}>
-                Ваша оценка: {grade ? grade.name : 'Неудовлетворительно'}
+
+            {detailedCount > 0 && (
+                <Text fontWeight='bold'>
+                    Количество развернутых ответов, требующих проверки:{' '}
+                    {detailedCount}
+                </Text>
+            )}
+
+            <Text
+                fontWeight='bold'
+                marginTop={5}
+                color={grade ? 'green' : 'red'}
+            >
+                Ваша {detailedCount > 0 ? 'предварительная' : 'окончательная'}{' '}
+                оценка: {grade ? grade.name : 'Неудовлетворительно'}
             </Text>
+
             <Button
                 marginTop={25}
                 onClick={() => {
@@ -73,4 +69,113 @@ export function Result({
             </Button>
         </>
     )
+}
+
+function calculateScore(answersData: AnswersData, test: Test) {
+    let score = 0
+
+    for (let key in answersData) {
+        const questionIndex = parseInt(key)
+        const answer = answersData[key]
+
+        if (
+            isNaN(questionIndex) ||
+            questionIndex < 0 ||
+            questionIndex >= test.questions.length
+        ) {
+            throw new Error('Неверный номер вопроса')
+        }
+
+        if (!answer) {
+            continue
+        }
+
+        const question = test.questions[questionIndex]
+
+        switch (question.type) {
+            case 'single': {
+                if (typeof answer !== 'string') {
+                    throw new Error(
+                        'Неправильный тип данных при чтении ответов'
+                    )
+                }
+
+                if (!question.answers) {
+                    throw new Error('Отсутствуют правильные варианты ответов')
+                }
+
+                const answerIndex = parseInt(answer)
+
+                if (question.answers[answerIndex].isRight) {
+                    score++
+                }
+
+                break
+            }
+            case 'multi': {
+                if (!Array.isArray(answer)) {
+                    throw new Error(
+                        'Неправильный тип данных при чтении ответов'
+                    )
+                }
+
+                if (!question.answers) {
+                    throw new Error('Отсутствуют правильные варианты ответов')
+                }
+
+                const answerIndexes = structuredClone(answer).map((x) =>
+                    parseInt(x)
+                )
+
+                if (
+                    answerIndexes.length !==
+                    question.answers.filter((x) => x.isRight).length
+                ) {
+                    continue
+                }
+
+                for (let answerIndex of answerIndexes) {
+                    if (!question.answers[answerIndex].isRight) {
+                        continue
+                    }
+                }
+
+                score++
+                break
+            }
+            case 'short': {
+                if (typeof answer !== 'string') {
+                    throw new Error(
+                        'Неправильный тип данных при чтении ответов'
+                    )
+                }
+
+                if (question.answers.length > 0) {
+                    for (let questionAnswer of question.answers) {
+                        if (
+                            formatString(answer) ===
+                            formatString(questionAnswer.text)
+                        ) {
+                            score++
+                            break
+                        }
+                    }
+                }
+
+                break
+            }
+            case 'detailed': {
+                break
+            }
+            default: {
+                throw new Error('Неизвестный тип вопроса')
+            }
+        }
+    }
+
+    return score
+}
+
+function formatString(str: string) {
+    return str.trim().toLowerCase().replace(/\s+/g, ' ')
 }
