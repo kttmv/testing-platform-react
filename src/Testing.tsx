@@ -16,13 +16,26 @@ export type AnswersData = {
 }
 
 export function Testing({ test }: Props) {
-    const defaultValues: AnswersData = {}
-    for (let i = 0; i < test.questions.length; i++) {
-        defaultValues[i] = null
-    }
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(
+        parseInt(window.localStorage.getItem('questionIndex') ?? '0')
+    )
 
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [timer, setTimer] = useState(test.time)
+    useEffect(() => {
+        window.localStorage.setItem(
+            'questionIndex',
+            JSON.stringify(currentQuestionIndex)
+        )
+    }, [currentQuestionIndex])
+
+    const [timer, setTimer] = useState(
+        parseInt(
+            window.localStorage.getItem('timer') ?? JSON.stringify(test.time)
+        )
+    )
+
+    useEffect(() => {
+        window.localStorage.setItem('timer', JSON.stringify(timer))
+    }, [timer])
 
     useEffect(() => {
         if (timer > 0) {
@@ -34,9 +47,23 @@ export function Testing({ test }: Props) {
         }
 
         setCurrentQuestionIndex(test.questions.length)
+        window.localStorage.removeItem('test')
     }, [timer])
 
-    const form = useForm<AnswersData>({ defaultValues })
+    const defaultValues: AnswersData = {}
+    for (let i = 0; i < test.questions.length; i++) {
+        defaultValues[i] = null
+    }
+
+    const form = useForm<AnswersData>({
+        defaultValues: JSON.parse(
+            window.localStorage.getItem('test') ?? JSON.stringify(defaultValues)
+        )
+    })
+
+    useEffect(() => {
+        window.localStorage.setItem('test', JSON.stringify(form.watch()))
+    }, [form.watch()])
 
     return (
         <Flex width='100vw' height='100vh' justifyContent='center'>

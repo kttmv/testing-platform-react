@@ -29,6 +29,7 @@ export function Questions({
 
     const onSubmit = () => {
         setCurrentQuestionIndex(test.questions.length)
+        window.localStorage.removeItem('test')
     }
 
     let answerTypeString: string
